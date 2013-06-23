@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>Embed Gist</title>
+
+  <!--[if IE]>
+    <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <style>
+    body {padding: 1em;}
+    .gist {border-bottom: thin solid #ccc; margin-bottom: 1.5em; padding-bottom: .5em;}
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Embed Gist</h1>
+    <p class="lead">Start by searching for a GitHub username.</p>
+  </header>
+
+  <div id="main">
+    <form class="form-search" id="username-search">
+      <div class="input-append">
+        <input type="text" id="username" value="christopher-b" class="input-medium search-query" />
+        <input type="submit" class="btn" />
+      </div>
+    </form>
+    <div id="placeholder"></div>
+  </div>
+
+  <footer></footer>
+
+  <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+  <script>
+    var returnUrl = '<%= params['launch_presentation_return_url'] %>';
+    $(function(){
+
+      $('#username-search').submit(function(){
+        var username = $('#username').val();
+        var url = 'https://api.github.com/users/'+username+'/gists';
+        $.getJSON(url, function(data, status, request){
+          if(status == 'success') { onSuccess(data); }
+          else                    { onError(data, status, request); }
+        });
+        return false;
+      });
+    });
+
+    function onSuccess(data){
+      var oembedUrl,
+          oembedEndpoint,
+          callbackUrl,
+          username,
+          description
+          html = '';
+
+      $.each(data, function(index, gist){
+        console.log(gist);
+
+        description = gist.description || "(No description)";
+        username    = gist.user.login;
+
+        html += '<div class="gist">';
+        html += "<p class='gist-description'><b>" + description + "</b></p>";
+
+        $.each(gist.files, function(index, file){
+          oembedUrl       = encodeURIComponent( 'https://gist.github.com/' + username + '/' + gist.id + '/raw/' + file.filename);
+          oembedEndpoint  = encodeURIComponent( '<%= context_url + 'embed' %>' );
+          callbackUrl     = returnUrl + '?return_type=oembed&endpoint=' + oembedEndpoint + '&url=' + oembedUrl;
+
+          html += '<p><a href="' + callbackUrl + '" class="btn btn-mini btn-primary" title="Embed this file"><i class="icon-share icon-white"></i> Embed</a> ' + file.filename;
+          if(file.language){
+            html += ' (' + file.language + ')';
+          }
+          html += '</p>';
+        });
+        html += '</div>';
+      });
+      $('#placeholder').html(html);
+    }
+
+    function onError(data, status, request){
+      console.log('error');
+      console.log(data);
+      console.log(status);
+    }
+
+    function filenameSlug(filename){
+      var pattern = /[\._\s]/g;
+      return filename.toLowerCase().replace(pattern, "-");
+    }
+  </script>
+
+</body>
+</html>

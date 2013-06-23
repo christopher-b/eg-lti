@@ -1,0 +1,9 @@
+<% if @tp.launch_presentation_return_url %>
+  <p><a href="<%= @tp.oembed_content_return_url("https://gist.github.com/christopher-b/4636430", "http://eg-lti.dev:9393/oembed")
+  %>">oembed</a></li>
+  </p>
+
+  <p>
+  <a href="<%= @tp.oembed_content_return_url("https://gist.github.com/christopher-b/4636430", "http://noembed.com/embed")%>">noembed</a></li>
+  </p>
+<% end %>

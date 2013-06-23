@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8 />
+  <title>Embed Gist</title>
+
+  <!--[if IE]>
+    <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <style>
+    body {padding: 1em;}
+    .gist {border-bottom: thin solid #ccc; margin-bottom: 1.5em; padding-bottom: .5em;}
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>EG LTI: Embed Gist</h1>
+    <p class="lead">
+      An LTI tool that allows you to embed <a href="https://gist.github.com/">Github Gists</a> in your <a href="http://www.instructure.com/">Canvas</a> pages and discussions.
+    </p>
+  </header>
+
+  <div id="main">
+    <section>
+      <h2>How to Use</h2>
+      <ol>
+        <li>
+          Add EG to your course or account as an external tool. Paste the <a href="/config.xml">configuration</a> URL into the external tool "By URL" field.
+          <div class="well">
+            <p><%= context_url %>config.xml</p>
+          </div>
+        </li>
+      <li>
+        This will add the Embed Gist <img src="/img/GitHub-Mark-32px.png" width="16px" /> button the text editor menu bar.
+      </li>
+      <li>
+        Search for Gists by GitHub username.
+      </li>
+    </ol>
+    </section>
+
+    <section>
+      <h2>Know Issues</h2>
+      <ul>
+        <li>There are some problems with text wrapping that will cause the line numbers to display incorrectly. I suggest trying to make sure your code doesn't need to wrap. Also, enlarge the embedded content right after in is inserted.</li>
+        <li>Report bugs or feature requests on <a href="https://github.com/christopher-b/eg-lti"></a>GitHub.</li>
+      </ul>
+    </section>
+  </div>
+
+  <footer></footer>
+
+  <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+
+</body>
+</html>
