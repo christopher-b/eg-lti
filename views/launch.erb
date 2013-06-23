@@ -11,6 +11,7 @@
   <style>
     body {padding: 1em;}
     .gist {border-bottom: thin solid #ccc; margin-bottom: 1.5em; padding-bottom: .5em;}
+    #loading-bar {margin-top:5px;}
   </style>
 </head>
 <body>
@@ -21,28 +22,51 @@
   </header>
 
   <div id="main">
-    <form class="form-search" id="username-search">
-      <div class="input-append">
+
+    <form class="form-search clearfix" id="username-search">
+      <div class="input-append pull-left">
         <input type="text" id="username" value="christopher-b" class="input-medium search-query" />
         <input type="submit" class="btn" />
       </div>
+      <div class="progress progress-striped active pull-left span2 hide" id="loading-bar">
+        <div class="bar" style="width:100%;">Loading&hellip;</div>
+      </div>
     </form>
+
+    <div class="alert alert-error hide" id="error-alert">
+      <a class="close" id="error-close" href="#">&times;</a>
+      <span id="error-message">!</span>
+    </div>
+
     <div id="placeholder"></div>
+
   </div>
 
   <footer></footer>
 
   <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
   <script>
-    var returnUrl = '<%= params['launch_presentation_return_url'] %>';
-    $(function(){
 
+    var returnUrl = '<%= params['launch_presentation_return_url'] %>';
+
+    $(function(){
+      $('#error-close').click(function(){$('#error-alert').hide();});
       $('#username-search').submit(function(){
         var username = $('#username').val();
         var url = 'https://api.github.com/users/'+username+'/gists';
-        $.getJSON(url, function(data, status, request){
-          if(status == 'success') { onSuccess(data); }
-          else                    { onError(data, status, request); }
+        reset();
+        $('#loading-bar').show();
+        $.ajax({
+          dataType: "json",
+          url: url,
+          success: onSuccess,
+          error: onError,
+          /* statusCode: {
+            404: function() {
+              alert("page not found");
+            }
+          } */
         });
         return false;
       });
@@ -56,9 +80,9 @@
           description
           html = '';
 
-      $.each(data, function(index, gist){
-        console.log(gist);
+      $('#loading-bar').hide();
 
+      $.each(data, function(index, gist){
         description = gist.description || "(No description)";
         username    = gist.user.login;
 
@@ -81,10 +105,20 @@
       $('#placeholder').html(html);
     }
 
-    function onError(data, status, request){
-      console.log('error');
-      console.log(data);
-      console.log(status);
+    function onError(jqXHR, textStatus, errorThrown){
+      // console.log(jqXHR, textStatus, errorThrown);
+      $('#loading-bar').hide();
+      switch(jqXHR.status){
+        case 404:
+        $('#error-alert').show();
+          $('#error-message').html('GitHub user not found.');
+          break;
+      }
+    }
+
+    function reset(){
+      $('#placeholder').html('');
+      $('#error-alert').hide();
     }
 
     function filenameSlug(filename){
