@@ -57,7 +57,6 @@ get '/config.xml' do
   tc.set_ext_params($extension_platform, {
     'privacy_level' => 'public',
     'text'          => 'Embed Gist',
-    'domain'        => 'localhost',
     'editor_button' => {
       'enabled'           => 'true',
       'icon_url'          => context_url + 'img/GitHub-Mark-32px.png',
