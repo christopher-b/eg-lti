@@ -1,7 +1,9 @@
 # EG LTI: Embed Gist
 An LTI tool that allows you to embed [Github Gists][1] in your [Canvas][2] pages and discussions.
 
-##How to Use
+**This project has been archived.**
+
+## How to Use
  1. Add EG to your course or account as an external tool. Paste the configuration URL into the external tool "By URL" field.
 
         http://[installation URL]/config.xml
